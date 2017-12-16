@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    jQuery扩展插件方法：<br/>
+    1:$.fn.extend -> $("#id").preLoad();<br/>
+    2:$.extend -> $.preLoad()；属于工具方法<br/>
+    <img src="./images/bubble01.png" alt="">
+</body>
+<script src="jquery-2.0.2.min.js"></script>
+<script>
+    (function($){
+        function PreLoad(imgs,opts){
+            this.imgs = (typeof imgs === 'string') ? [imgs] : imgs ;
+            this.opts = $.extend({},PreLoad.DDEFAULT,opts);
+            this._unoredered();
+        }
+        PreLoad.DDEFAULT = {
+            each:null,//每张图片加载完成执行的方法
+            all:null
+        }
+        PreLoad.prototype._unoredered = function(){
+            var imgs = this.imgs,
+                opts = this.opts,
+                count = 0,
+                len = this.imgs.length;
+           $.each(imgs,function(i,src){
+                
+                if(typeof src != 'string') return ;
+                var imgObj = new Image();
+                $(imgObj).on("load error",function(){
+                    opts.each && opts.each(i);
+                    if(count > len - 1){
+                        opts.all && opts.all();
+                    }
+                    count++ ;
+                    console.log(count);
+                });
+                imgObj.src = src;
+            });
+        };
+        $.extend({
+            preload:function(imgs,opts){
+                new PreLoad(imgs,opts);
+            }
+        });
+        console.log(0);
+    })(jQuery);
+
+    (function($){
+        console.log(1);
+        // var imgs = [
+        //     'http://pic23.photophoto.cn/20120530/0020033092420808_b.jpg',
+        //     'http://img1.3lian.com/2015/a1/95/d/105.jpg',
+        //     'http://img.taopic.com/uploads/allimg/130331/240460-13033106243430.jpg',
+        //     'http://img.juimg.com/tuku/yulantu/140313/330457-14031320362254.jpg'
+        // ];
+        // var imgs=[
+        //     "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366919&di=10c4e9a4b1e709521d9221442da09a30&imgtype=0&src=http%3A%2F%2Fimg.bimg.126.net%2Fphoto%2FoM_UO94T-HaQIQLuhdULSA%3D%3D%2F5774177672242663144.jpg",
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366919&di=899bc315ae12ae4ed54ed9973e9b197a&imgtype=0&src=http%3A%2F%2Fuserimage8.360doc.com%2F16%2F0716%2F11%2F642066_201607161137450134876799.jpg',
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366917&di=75c1a6b13d3399e0a7130163ff28a555&imgtype=0&src=http%3A%2F%2Fimage.tianjimedia.com%2FuploadImages%2F2011%2F286%2FE27LF6AIAG2W.jpg',
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502791298389&di=43f3475699d8d7a630591af1fe5fd7d8&imgtype=jpg&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F314e251f95cad1c80fefc1e6763e6709c83d519e.jpg',
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366670&di=da416a832a33a9dde0b14877bafe69d9&imgtype=0&src=http%3A%2F%2Ftupian.enterdesk.com%2F2012%2F1029%2Fzyz%2F03%2F14583115_1350966109847.jpg',
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366667&di=1bf3a6b1c5757ecf25bd75bcd7dcaa06&imgtype=0&src=http%3A%2F%2Fwww.wallcoo.com%2Fnature%2FSummer_Fantasy_Landscapes%2Fwallpapers%2F1680x1050%2FSummer_Fantasy_landscape_by_photo_manipulation_34467184.jpg',
+        //     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502790366661&di=d255d9e8435546ca4e648fdf068d0148&imgtype=0&src=http%3A%2F%2Fimg.tuku.cn%2Ffile_big%2F201503%2Fd8905515d1c046aeba51025f0ea842f0.jpg'
+        //     ];
+        
+        var imgs = [
+            "./images/bubble01.png",
+            "./images/bubble02.png",
+            "./images/bubble03.png",
+            "./images/bubble04.png"
+        ];
+        $.preload(imgs,{
+            each:function(count){
+                console.log(count);
+            },
+            all:function(aa){
+                console.log('ok');
+            }
+        });
+    })(jQuery)
+</script>
+</html>
